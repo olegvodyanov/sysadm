@@ -1,0 +1,14 @@
+---
+- hosts: all
+  become: true
+  roles:
+    - packages
+  tags:
+    - packages
+
+- hosts: nginx
+  become: true
+  roles:
+    - nginx
+  tags:
+    - nginx

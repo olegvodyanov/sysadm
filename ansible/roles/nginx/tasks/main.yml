@@ -1,0 +1,41 @@
+#SPDX-License-Identifier: MIT-0
+---
+# tasks file for nginx
+- name: install nginx
+  apt:
+    name: "nginx"
+    state: present
+
+- block:
+    - name: template linux-proxy-nginx
+      template:
+        src: linux-proxy-nginx/upstream
+        dest: /etc/nginx/sites-available/upstream
+
+    - name: make link
+      file:
+        src: /etc/nginx/sites-available/upstream
+        dest: /etc/nginx/sites-enabled/upstream
+        state: link
+  when: hostvars[inventory_hostname]['inventory_hostname'] in 'linux-proxy-nginx'
+
+- block:
+    - name: template linux-nginx
+      template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+      loop:
+        - { src: 'linux-nginx/index.html', dest: '/var/www/index.html' }
+        - { src: 'linux-nginx/nginx', dest: '/etc/nginx/sites-available/nginx' }
+    
+    - name: make link
+      file:
+        src: /etc/nginx/sites-available/nginx
+        dest: /etc/nginx/sites-enabled/nginx
+        state: link
+  when: hostvars[inventory_hostname]['inventory_hostname'] in 'linux-nginx'
+
+- name: template linux-nginx
+  systemd:
+    name: nginx
+    state: restarted
