@@ -1,3 +1,3 @@
 variable "virtual_machines" {
- default = ""
+  default = ""
 } 

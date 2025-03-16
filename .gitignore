@@ -1,3 +1,6 @@
 terraform/key.json
 terraform/.terraform.lock.hcl
 terraform/.terraform
+terraform/user-data
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
